@@ -29,5 +29,16 @@ export const Line = <Figure>{
         [{}, {}, {}, {}],
     ]
 }
+export const Z = <Figure>{
+    position: {
+        x: 0,
+        y: 0
+    },
+    matrix: [
+        [{}, {color: 'green'}, {color: 'green'}],
+        [{color: 'green'}, {color: 'green'}, {}],
+        [{}, {}, {}],
+    ]
+}
 
-export const FIGURES = [Cube, Line];
+export const FIGURES = [Z, Cube, Line];

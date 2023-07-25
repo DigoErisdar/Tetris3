@@ -12,7 +12,7 @@
 import style from './VGame.module.scss';
 import {onMounted, reactive} from "vue";
 import {Game} from "@/types/Game.ts";
-import {Figure, FIGURES, Line} from "@/types/Figure.ts";
+import {Figure, FIGURES, Line, Z} from "@/types/Figure.ts";
 import useMatrix from "@/composables/useMatrix.ts";
 
 interface GameProps {
@@ -36,7 +36,6 @@ const game = reactive<Game>({
 
 
 function getRandomFigure(): Figure {
-  return Line
   return FIGURES[Math.floor(Math.random() * FIGURES.length)];
 }
 
@@ -76,6 +75,8 @@ function move(x: number = 0, y: number = 0) {
 
 onMounted(() => {
   draw(game.currentFigure);
+
+
   window.addEventListener('keydown', e => {
     const {key} = e;
     switch (key) {
