@@ -77,7 +77,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
 
     function setNewFigure() {
         game.currentFigure = getRandomFigure();
-        if (!matrix.checkIntersection(game.currentFigure.matrix, game.matrix, game.currentFigure.position)) endGame()
+        move(0, 0).catch(() => endGame())
     }
 
     function checkLine() {
@@ -98,6 +98,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
 
     async function controller(event: KeyboardEvent) {
         const {key} = event;
+        if (event.shiftKey || event.altKey || event.ctrlKey) return
         if (key == 'p') await pause();
         if (!game.isPause) switch (key) {
             case 'a':
@@ -115,6 +116,12 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
             case 'r':
                 if (confirm('restart')) restart();
                 break;
+            case " ":
+                let down: any = async () => {
+                    if (await move(0, 1)) return await down()
+                }
+                await down();
+                break;
         }
     }
 
@@ -123,18 +130,23 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         if (isPause) {
             clearInterval(gameInterval);
         } else {
-            gameInterval = setInterval(() => move(0, 1).catch(() => {
-                checkLine();
-                setNewFigure()
-            }), game.speed)
+            gameInterval = setInterval(() => {
+                move(0, 1)
+                    .catch(() => {
+                        checkLine();
+                        setNewFigure()
+                    })
+            }, game.speed)
         }
     }
 
     function stop() {
-        window.removeEventListener('keydown', controller);
+        pause(true).then(() => window.removeEventListener('keydown', controller));
     }
 
     function restart() {
+        game.speed = 200;
+        game.score = 0;
         game.matrix = matrix.get(game.rows, game.cols);
         game.currentFigure = getRandomFigure();
     }

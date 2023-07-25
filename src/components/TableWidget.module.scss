@@ -1,10 +1,18 @@
 .TableWidget {
   border: 1px solid black;
+  background: #11071F;
+}
 
-  td {
-    --side: 25px;
-    width: var(--side);
-    height: var(--side);
-    border: none;
-  }
+.TableWidgetBlock {
+  --side: 25px;
+  --color: transparent;
+  width: var(--side);
+  height: var(--side);
+  border: none;
+  color: white;
+  background-color: var(--color);
+}
+
+.TableWidgetEmptyBlock {
+  box-shadow: inset -3px -4px 5px 0 rgb(0, 0, .3);
 }

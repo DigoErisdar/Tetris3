@@ -2,7 +2,13 @@
   <div>
     <p>Скорость: {{ tetris.game.speed }} мс</p>
     <p>Очков: {{ tetris.game.score }}</p>
-    <p v-show="tetris.game.isPause">Игра остановлена</p>
+    <p v-show="tetris.game.isPause">Игра остановлена или окончена</p>
+    <div>
+      Управление:
+      <p>w - Поворот</p>
+      <p>p - Пауза</p>
+      <p>Пробел - До конца вниз</p>
+    </div>
   </div>
   <div :class="style.VGame">
     <div>

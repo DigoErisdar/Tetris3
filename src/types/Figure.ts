@@ -57,8 +57,8 @@ const createG = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{}, {}, {color: 'brown'}],
-        [{color: 'brown'}, {color: 'brown'}, {color: 'brown'}],
+        [{}, {}, {color: 'yellow'}],
+        [{color: 'yellow'}, {color: 'yellow'}, {color: 'yellow'}],
         [{}, {}, {}],
     ]
 });
