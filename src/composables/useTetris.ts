@@ -4,7 +4,7 @@ import {Action, Game, Matrix} from "@/types/Game.ts";
 import {reactive} from "vue";
 import {Block, Coordinate} from "@/types/Block.ts";
 
-export default function useTetris(cols: number, rows: number, speed: number = 300) {
+export default function useTetris(cols: number, rows: number, speed: number = 150) {
     let gameInterval: ReturnType<typeof setInterval>;
     const matrix = useMatrix();
     const game = reactive<Game>({
@@ -93,18 +93,15 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
         }
     }
 
-    function start() {
-        draw(game.currentFigure.matrix, game.currentFigure.position, game.matrix);
-        gameInterval = setInterval(() => move(0, 1).catch(() => {
-            checkLine();
-            setNewFigure()
-        }), game.speed)
+    async function start() {
         window.addEventListener('keydown', controller)
+        await pause(false);
     }
 
     async function controller(event: KeyboardEvent) {
         const {key} = event;
-        switch (key) {
+        if (key == 'p') await pause();
+        if (!game.isPause) switch (key) {
             case 'a':
                 await move(-1);
                 break;
@@ -114,16 +111,38 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
             case 's':
                 await move(0, 1);
                 break;
-            case 'r':
+            case 'w':
                 await rotate();
+                break;
+            case 'r':
+                if (confirm('restart')) restart();
                 break;
         }
     }
 
-    function endGame() {
-        clearInterval(gameInterval);
-        alert('game over')
+    async function pause(isPause = !game.isPause) {
+        game.isPause = isPause;
+        if (isPause) {
+            clearInterval(gameInterval);
+        } else {
+            gameInterval = setInterval(() => move(0, 1).catch(() => {
+                checkLine();
+                setNewFigure()
+            }), game.speed)
+        }
+    }
+    function stop(){
         window.removeEventListener('keydown', controller);
+    }
+
+    function restart() {
+        game.matrix = matrix.get(game.rows, game.cols);
+        game.currentFigure = getRandomFigure();
+    }
+
+    async function endGame() {
+        if (confirm('game over, restart?')) restart();
+        else stop()
     }
 
     return {

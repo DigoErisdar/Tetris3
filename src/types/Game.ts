@@ -1,7 +1,7 @@
 import {Block, Coordinate} from "./Block.ts";
 import {Figure} from "@/types/Figure.ts";
 
-export type Matrix = Array<Array<Block>>
+export type Matrix = Block[][];
 
 export interface Game {
     rows: number,
@@ -10,6 +10,8 @@ export interface Game {
     currentFigure: Figure,
     speed: number,
     score: number,
+    isPause?:boolean,
+    isPlayed?:boolean,
 }
 
 export interface Action {
