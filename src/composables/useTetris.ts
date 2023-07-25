@@ -4,7 +4,7 @@ import {Action, Game, Matrix} from "@/types/Game.ts";
 import {reactive} from "vue";
 import {Block, Coordinate} from "@/types/Block.ts";
 
-export default function useTetris(cols: number, rows: number, speed: number = 150) {
+export default function useTetris(cols: number, rows: number, speed: number = 200) {
     let gameInterval: ReturnType<typeof setInterval>;
     const matrix = useMatrix();
     const game = reactive<Game>({
@@ -72,9 +72,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 15
         const matrix = game.currentFigure.matrix.copyWithin(0, 0);
         const N = matrix?.length - 1;
         const tempMatrix = matrix.map((row, i) => row.map((_, j) => matrix[N - j][i]));
-        return action(data => {
-            data.matrix = tempMatrix;
-        })
+        return action(data => data.matrix = tempMatrix)
     }
 
     function setNewFigure() {
@@ -131,7 +129,8 @@ export default function useTetris(cols: number, rows: number, speed: number = 15
             }), game.speed)
         }
     }
-    function stop(){
+
+    function stop() {
         window.removeEventListener('keydown', controller);
     }
 
@@ -140,7 +139,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 15
         game.currentFigure = getRandomFigure();
     }
 
-    async function endGame() {
+    function endGame() {
         if (confirm('game over, restart?')) restart();
         else stop()
     }
