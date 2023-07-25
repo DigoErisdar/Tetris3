@@ -9,6 +9,7 @@ export interface Game {
     matrix: Matrix,
     currentFigure: Figure,
     speed: number,
+    score: number,
 }
 
 export interface Action {

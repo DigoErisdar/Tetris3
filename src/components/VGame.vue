@@ -1,4 +1,9 @@
 <template>
+  <div>
+    <p>Скорость: {{ tetris.game.speed }} мс</p>
+    <p>Очков: {{ tetris.game.score }}</p>
+
+  </div>
   <div :class="style.VGame">
     <div>
       <h2>Table</h2>
@@ -8,7 +13,6 @@
       <h2>Canvas</h2>
       <CanvasWidget :matrix="tetris.game.matrix"/>
     </div>
-
   </div>
 
 </template>
@@ -26,10 +30,10 @@ interface GameProps {
 }
 
 const props = withDefaults(defineProps<GameProps>(), {
-  rows: 16,
+  rows: 20,
   cols: 10,
 })
-const tetris = useTetris(props.cols, props.rows, 1000);
+const tetris = useTetris(props.cols, props.rows);
 onMounted(() => {
   tetris.start();
 })

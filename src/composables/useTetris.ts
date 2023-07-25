@@ -13,6 +13,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
         matrix: matrix.get(rows, cols),
         currentFigure: getRandomFigure(),
         speed,
+        score: 0,
     })
 
     function getRandomFigure(): Figure {
@@ -81,9 +82,23 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
         if (!matrix.checkIntersection(game.currentFigure.matrix, game.matrix, game.currentFigure.position)) endGame()
     }
 
+    function checkLine() {
+        for (let row = 0; row < game.matrix?.length; row++) {
+            if (game.matrix[row].every((block) => !!block?.color)) {
+                game.matrix.splice(row, 1);
+                game.matrix.splice(0, 0, Array.from({length: cols}, () => <Block>{}))
+                game.score++;
+                if (game.speed >= 10) game.speed -= 10;
+            }
+        }
+    }
+
     function start() {
         draw(game.currentFigure.matrix, game.currentFigure.position, game.matrix);
-        gameInterval = setInterval(() => move(0, 1).catch(() => setNewFigure()), game.speed)
+        gameInterval = setInterval(() => move(0, 1).catch(() => {
+            checkLine();
+            setNewFigure()
+        }), game.speed)
         window.addEventListener('keydown', controller)
     }
 
