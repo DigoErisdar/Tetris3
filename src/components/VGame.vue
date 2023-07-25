@@ -1,15 +1,17 @@
 <template>
-  <table :class="[style.VGame]">
-    <tr v-for="row in tetris.game.matrix">
-      <td v-for="block in row" :style="{backgroundColor: block.color}"></td>
-    </tr>
-  </table>
+  <div :class="style.VGame">
+    <TableWidget :matrix="tetris.game.matrix"/>
+    <CanvasWidget :matrix="tetris.game.matrix"/>
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import style from './VGame.module.scss';
 import useTetris from "@/composables/useTetris.ts";
 import {onMounted} from "vue";
+import TableWidget from "@/components/TableWidget.vue";
+import CanvasWidget from "@/components/CanvasWidget.vue";
+import style from "@/components/VGame.module.scss";
 
 interface GameProps {
   rows?: number,
@@ -20,6 +22,6 @@ const props = withDefaults(defineProps<GameProps>(), {
   rows: 20,
   cols: 10,
 })
-const tetris = useTetris(props.cols, props.rows);
+const tetris = useTetris(props.cols, props.rows, 3000);
 onMounted(() => tetris.start())
 </script>

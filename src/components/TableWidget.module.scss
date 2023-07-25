@@ -1,0 +1,8 @@
+.TableWidget {
+  td {
+    --side: 25px;
+    width: var(--side);
+    height: var(--side);
+    border: 1px solid black;
+  }
+}
