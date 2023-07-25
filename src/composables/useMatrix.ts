@@ -24,14 +24,18 @@ export default function useMatrix() {
     }
 
     function checkIntersection(a: Matrix, b: Matrix, pos: Coordinate): boolean {
-        //a & b
+        const currentBlocks = Array.from(iter(a), ({block}) => block);
         for (const {
             position
         } of iter(a)) {
             const newX = position.x + pos.x;
             const newY = position.y + pos.y;
             try {
-                if (!!b[newY][newX]?.color || newX < 0 || newX >= b[newY]?.length) return false
+                const targetBlock = b[newY][newX];
+                const isCurrentBlock = currentBlocks.includes(targetBlock);
+                const isBorders = newX < 0 || newX >= b[newY]?.length;
+                const isTargetBlock = !!targetBlock?.color;
+                if ((isTargetBlock && !isCurrentBlock) || isBorders) return false;
             } catch (e) {
                 return false
             }

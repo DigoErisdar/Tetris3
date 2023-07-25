@@ -19,9 +19,11 @@ interface GameProps {
 }
 
 const props = withDefaults(defineProps<GameProps>(), {
-  rows: 20,
+  rows: 16,
   cols: 10,
 })
-const tetris = useTetris(props.cols, props.rows, 3000);
-onMounted(() => tetris.start())
+const tetris = useTetris(props.cols, props.rows);
+onMounted(() => {
+  tetris.start();
+})
 </script>

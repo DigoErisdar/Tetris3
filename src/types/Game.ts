@@ -1,4 +1,4 @@
-import {Block} from "./Block.ts";
+import {Block, Coordinate} from "./Block.ts";
 import {Figure} from "@/types/Figure.ts";
 
 export type Matrix = Array<Array<Block>>
@@ -9,4 +9,9 @@ export interface Game {
     matrix: Matrix,
     currentFigure: Figure,
     speed: number,
+}
+
+export interface Action {
+    matrix: Matrix,
+    position: Coordinate,
 }

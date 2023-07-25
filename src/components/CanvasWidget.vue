@@ -6,10 +6,14 @@
 <script setup lang="ts">
 import style from './CanvasWidget.module.scss';
 import {Matrix} from "@/types/Game.ts";
+import {watch} from "vue";
 
 interface Props {
   matrix: Matrix
 }
+const props = defineProps<Props>()
 
-defineProps<Props>()
+watch(props.matrix, () => {
+  console.log('change matrix')
+})
 </script>

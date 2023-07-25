@@ -1,7 +1,8 @@
 import {Figure, FigureFactory, FIGURES} from "@/types/Figure.ts";
 import useMatrix from "@/composables/useMatrix.ts";
-import {Game} from "@/types/Game.ts";
+import {Action, Game, Matrix} from "@/types/Game.ts";
 import {reactive} from "vue";
+import {Block, Coordinate} from "@/types/Block.ts";
 
 export default function useTetris(cols: number, rows: number, speed: number = 300) {
     let gameInterval: ReturnType<typeof setInterval>;
@@ -20,59 +21,59 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
     }
 
 
-    function draw(figure: Figure) {
+    function _draw(area: Matrix, pos: Coordinate, target: Matrix, callback: (block: Block) => Block) {
         for (const {
             block,
             position
-        } of matrix.iter(figure.matrix)) {
-            const newX = figure.position.x + position.x;
-            const newY = figure.position.y + position.y;
-            game.matrix[newY][newX] = block;
+        } of matrix.iter(area)) {
+            const newX = pos.x + position.x;
+            const newY = pos.y + position.y;
+            target[newY][newX] = callback(block);
         }
     }
 
-    function erase(figure: Figure) {
-        for (const {
-            position
-        } of matrix.iter(figure.matrix)) {
-            const newX = figure.position.x + position.x;
-            const newY = figure.position.y + position.y;
-            game.matrix[newY][newX] = {};
-        }
-    }
-
-    async function action(callback: CallableFunction, rollback?: CallableFunction) {
-        return await new Promise((resolve, reject) => {
-            erase(game.currentFigure);
-            callback()
-            const hasMove = matrix.checkIntersection(game.currentFigure.matrix, game.matrix, game.currentFigure.position)
-            if (!hasMove && rollback) {
-                rollback()
-                return reject('Не может двигаться')
-            }
-            return resolve(true)
+    function erase(area: Matrix, pos: Coordinate, target: Matrix) {
+        _draw(area, pos, target, () => {
+            return {}
         })
-            .finally(() => {
-                draw(game.currentFigure);
-            })
+    }
+
+    function draw(area: Matrix, pos: Coordinate, target: Matrix) {
+        _draw(area, pos, target, block => block)
+    }
+
+    async function action(callback: (data: Action) => void) {
+        return await new Promise((resolve, reject) => {
+            const tempFigure = {
+                matrix: game.currentFigure.matrix.copyWithin(0, 0),
+                position: {...game.currentFigure.position}
+            }
+            callback(tempFigure);
+            const hasMove = matrix.checkIntersection(tempFigure.matrix, game.matrix, tempFigure.position);
+            if (!hasMove) return reject('Не может двигаться');
+            else {
+                erase(game.currentFigure.matrix, game.currentFigure.position, game.matrix);
+                callback(game.currentFigure)
+                draw(game.currentFigure.matrix, game.currentFigure.position, game.matrix);
+                return resolve(true)
+            }
+        })
     }
 
     function move(x: number = 0, y: number = 0) {
-        return action(() => {
-            game.currentFigure.position.x += x;
-            game.currentFigure.position.y += y;
-        }, () => {
-            game.currentFigure.position.x -= x;
-            game.currentFigure.position.y -= y;
+        return action(data => {
+            data.position.x += x;
+            data.position.y += y;
         })
     }
 
     function rotate() {
-        const matrix = game.currentFigure.matrix;
+        const matrix = game.currentFigure.matrix.copyWithin(0, 0);
         const N = matrix?.length - 1;
-        let oldMatrix = matrix.copyWithin(0, 0);
         const tempMatrix = matrix.map((row, i) => row.map((_, j) => matrix[N - j][i]));
-        return action(() => game.currentFigure.matrix = tempMatrix, () => game.currentFigure.matrix = oldMatrix)
+        return action(data => {
+            data.matrix = tempMatrix;
+        })
     }
 
     function setNewFigure() {
@@ -81,7 +82,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 30
     }
 
     function start() {
-        draw(game.currentFigure);
+        draw(game.currentFigure.matrix, game.currentFigure.position, game.matrix);
         gameInterval = setInterval(() => move(0, 1).catch(() => setNewFigure()), game.speed)
         window.addEventListener('keydown', controller)
     }
