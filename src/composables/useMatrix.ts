@@ -3,8 +3,8 @@ import {Block, Coordinate} from "@/types/Block.ts";
 
 export default function useMatrix() {
     function get(rows: number, cols: number): Matrix {
-        return Array.from({length: rows}, (_, y) => {
-            return Array.from({length: cols}, (_, x) => <Block>{})
+        return Array.from({length: rows}, () => {
+            return Array.from({length: cols}, () => <Block>{})
         })
     }
 
@@ -26,7 +26,6 @@ export default function useMatrix() {
     function checkIntersection(a: Matrix, b: Matrix, pos: Coordinate): boolean {
         //a & b
         for (const {
-            block,
             position
         } of iter(a)) {
             const newX = position.x + pos.x;

@@ -12,7 +12,7 @@
 import style from './VGame.module.scss';
 import {onMounted, reactive} from "vue";
 import {Game} from "@/types/Game.ts";
-import {Figure, FIGURES, Line, Z} from "@/types/Figure.ts";
+import {Figure, FIGURES} from "@/types/Figure.ts";
 import useMatrix from "@/composables/useMatrix.ts";
 
 interface GameProps {
