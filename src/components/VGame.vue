@@ -1,7 +1,14 @@
 <template>
   <div :class="style.VGame">
-    <TableWidget :matrix="tetris.game.matrix"/>
-    <CanvasWidget :matrix="tetris.game.matrix"/>
+    <div>
+      <h2>Table</h2>
+      <TableWidget :matrix="tetris.game.matrix"/>
+    </div>
+    <div>
+      <h2>Canvas</h2>
+      <CanvasWidget :matrix="tetris.game.matrix"/>
+    </div>
+
   </div>
 
 </template>
@@ -22,7 +29,7 @@ const props = withDefaults(defineProps<GameProps>(), {
   rows: 16,
   cols: 10,
 })
-const tetris = useTetris(props.cols, props.rows, 3000);
+const tetris = useTetris(props.cols, props.rows, 1000);
 onMounted(() => {
   tetris.start();
 })

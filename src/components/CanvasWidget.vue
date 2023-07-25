@@ -23,7 +23,8 @@ const matrix = useMatrix();
 const side = 25;
 
 function draw() {
-  for (const {position} of matrix.iter(props.matrix)) {
+  for (const {block, position} of matrix.iter(props.matrix)) {
+    ctx.value.fillStyle = block.color;
     ctx.value.fillRect(position.x * side, position.y * side, side, side);
   }
 }

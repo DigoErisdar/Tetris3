@@ -1,5 +1,5 @@
 <template>
-  <table :class="[style.TableWidget]">
+  <table :class="style.TableWidget" cellpadding="0" cellspacing="0">
     <tr v-for="row in matrix">
       <td v-for="block in row" :style="{backgroundColor: block.color}"></td>
     </tr>
