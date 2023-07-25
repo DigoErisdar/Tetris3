@@ -1,6 +1,4 @@
 <template>
-  <p>{{ game.currentFigure }}</p>
-  <hr>
   <table :class="[style.VGame]">
     <tr v-for="row in game.matrix">
       <td v-for="block in row" :style="{backgroundColor: block.color}"></td>
@@ -61,17 +59,34 @@ function erase(figure: Figure) {
   }
 }
 
+function action(action: CallableFunction, cancel?: CallableFunction) {
+  return new Promise(() => {
+    erase(game.currentFigure);
+    action()
+    const hasMove = matrix.checkIntersection(game.currentFigure.matrix, game.matrix, game.currentFigure.position)
+    if (!hasMove && cancel) cancel()
+    draw(game.currentFigure);
+  })
+}
+
 function move(x: number = 0, y: number = 0) {
-  erase(game.currentFigure);
-  game.currentFigure.position.x += x;
-  game.currentFigure.position.y += y;
-  const hasMove = matrix.checkIntersection(game.currentFigure.matrix, game.matrix, game.currentFigure.position)
-  if (!hasMove) {
+  return action(() => {
+    game.currentFigure.position.x += x;
+    game.currentFigure.position.y += y;
+  }, () => {
     game.currentFigure.position.x -= x;
     game.currentFigure.position.y -= y;
-  }
-  draw(game.currentFigure);
+  })
 }
+
+function rotate() {
+  const matrix = game.currentFigure.matrix;
+  const N = matrix?.length - 1;
+  let oldMatrix = matrix.copyWithin(0, 0);
+  const tempMatrix = matrix.map((row, i) => row.map((_, j) => matrix[N - j][i]));
+  return action(() => game.currentFigure.matrix = tempMatrix, () => game.currentFigure.matrix = oldMatrix)
+}
+
 
 onMounted(() => {
   draw(game.currentFigure);
@@ -91,6 +106,9 @@ onMounted(() => {
         break;
       case 'w':
         move(0, -1);
+        break;
+      case 'r':
+        rotate();
         break;
     }
   })
