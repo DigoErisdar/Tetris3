@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<GameProps>(), {
   rows: 16,
   cols: 10,
 })
-const tetris = useTetris(props.cols, props.rows);
+const tetris = useTetris(props.cols, props.rows, 3000);
 onMounted(() => {
   tetris.start();
 })
