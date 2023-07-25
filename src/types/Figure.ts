@@ -7,7 +7,7 @@ export interface Figure {
     matrix: Matrix,
 }
 
-export const Cube = <Figure>{
+const createCube = (): Figure => ({
     position: {
         x: 0,
         y: 0
@@ -16,8 +16,8 @@ export const Cube = <Figure>{
         [{color: 'red'}, {color: 'red'}],
         [{color: 'red'}, {color: 'red'}],
     ]
-}
-export const Line = <Figure>{
+})
+const createLine = (): Figure => ({
     position: {
         x: 0,
         y: 0
@@ -28,8 +28,8 @@ export const Line = <Figure>{
         [{}, {}, {}, {}],
         [{}, {}, {}, {}],
     ]
-}
-export const Z = <Figure>{
+})
+const createZ = (): Figure => ({
     position: {
         x: 0,
         y: 0
@@ -39,6 +39,15 @@ export const Z = <Figure>{
         [{color: 'green'}, {color: 'green'}, {}],
         [{}, {}, {}],
     ]
-}
+});
 
-export const FIGURES = [Z, Cube, Line];
+export enum FIGURES {
+  Z = "Z",
+  Cube = "Cube",
+  Line = "Line",
+}
+export const FigureFactory = {
+    [FIGURES.Z]: createZ,
+    [FIGURES.Cube]: createCube,
+    [FIGURES.Line]: createLine,
+}

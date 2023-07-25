@@ -6,7 +6,7 @@ export type Matrix = Array<Array<Block>>
 export interface Game {
     rows: number,
     cols: number,
-    isPlayed?: boolean,
     matrix: Matrix,
     currentFigure: Figure,
+    speed: number,
 }
