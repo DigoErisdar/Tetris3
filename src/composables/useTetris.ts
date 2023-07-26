@@ -3,6 +3,7 @@ import useMatrix from "@/composables/useMatrix.ts";
 import {Action, Game, Matrix} from "@/types/Game.ts";
 import {reactive} from "vue";
 import {Block, Coordinate} from "@/types/Block.ts";
+import useController from "@/composables/useController.ts";
 
 export default function useTetris(cols: number, rows: number, speed: number = 200) {
     let gameInterval: ReturnType<typeof setInterval>;
@@ -13,8 +14,16 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         matrix: matrix.get(rows, cols),
         currentFigure: getRandomFigure(),
         speed,
+        isPause: false,
         score: 0,
     })
+
+    const controller = useController(game.isPause, {
+        pause,
+        move,
+        restart,
+        rotate,
+    });
 
     function getRandomFigure(): Figure {
         const randomIndex = Math.floor(Math.random() * Object.values(FIGURES)?.length);
@@ -43,7 +52,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         _draw(area, pos, target, block => block)
     }
 
-    async function action(callback: (data: Action) => void) {
+    async function action(callback: (data: Action) => void): Promise<boolean | string> {
         return await new Promise((resolve, reject) => {
             const tempFigure = {
                 matrix: game.currentFigure.matrix.copyWithin(0, 0),
@@ -61,7 +70,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         })
     }
 
-    function move(x: number = 0, y: number = 0) {
+    function move(x: number = 0, y: number = 0): Promise<boolean | string> {
         return action(data => {
             data.position.x += x;
             data.position.y += y;
@@ -92,44 +101,15 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
     }
 
     async function start() {
-        window.addEventListener('keydown', controller)
+        controller.on();
         await pause(false);
     }
 
-    async function controller(event: KeyboardEvent) {
-        const {key} = event;
-        if (event.shiftKey || event.altKey || event.ctrlKey) return
-        if (key == 'p') await pause();
-        if (!game.isPause) switch (key) {
-            case 'a':
-                await move(-1);
-                break;
-            case 'd':
-                await move(1);
-                break;
-            case 's':
-                await move(0, 1);
-                break;
-            case 'w':
-                await rotate();
-                break;
-            case 'r':
-                if (confirm('restart')) restart();
-                break;
-            case " ":
-                let down: any = async () => {
-                    if (await move(0, 1)) return await down()
-                }
-                await down();
-                break;
-        }
-    }
 
     async function pause(isPause = !game.isPause) {
         game.isPause = isPause;
-        if (isPause) {
-            clearInterval(gameInterval);
-        } else {
+        if (isPause) clearInterval(gameInterval)
+        else {
             gameInterval = setInterval(() => {
                 move(0, 1)
                     .catch(() => {
@@ -141,7 +121,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
     }
 
     function stop() {
-        pause(true).then(() => window.removeEventListener('keydown', controller));
+        pause(true).then(() => controller.off());
     }
 
     function restart() {
