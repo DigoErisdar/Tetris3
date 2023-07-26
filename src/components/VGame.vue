@@ -10,7 +10,7 @@
       <p>Пробел - До конца вниз</p>
     </div>
   </div>
-  <div style="display: flex; gap: 15px;">
+  <div style="display: flex; gap: 15px; height: 100px; align-items: center; justify-content: center;">
     <TableWidget v-for="figure in tetris.figuresSequence.items.value" :matrix="figure?.matrix"
                  style="background: transparent; border: none;"/>
   </div>
