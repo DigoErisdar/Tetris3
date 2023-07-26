@@ -96,20 +96,19 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
                 game.matrix.splice(row, 1);
                 game.matrix.splice(0, 0, Array.from({length: cols}, () => <Block>{}))
                 game.score++;
-                if (game.speed >= 10) game.speed -= 10;
+                if (game.speed > 10) game.speed -= 10;
             }
         }
     }
 
     async function start() {
         let cond = figuresSequence.push(getRandomFigure());
-        while (!cond){
+        while (!cond) {
             cond = figuresSequence.push(getRandomFigure());
         }
         controller.on();
         await pause(false);
     }
-
 
     async function pause(isPause = !game.isPause) {
         game.isPause = isPause;

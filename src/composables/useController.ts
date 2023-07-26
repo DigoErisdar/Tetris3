@@ -1,5 +1,5 @@
 export default function useController(isPause: boolean, actions: {
-    move: (x: number, y: number) => Promise<boolean|string>,
+    move: (x: number, y: number) => Promise<boolean | string>,
     rotate: () => void,
     restart: () => void,
     pause: () => void,
