@@ -1,4 +1,6 @@
-export default function useController(isPause: boolean, actions: {
+import {Ref} from "vue";
+
+export default function useController(isPause: Ref<boolean>, actions: {
     move: (x: number, y: number) => Promise<boolean | string>,
     rotate: () => void,
     restart: () => void,
@@ -9,7 +11,7 @@ export default function useController(isPause: boolean, actions: {
         const {key} = event;
         if (event.shiftKey || event.altKey || event.ctrlKey) return
         if (key == 'p' || key == 'з') actions.pause();
-        if (!isPause) switch (key) {
+        if (!isPause.value) switch (key) {
             case 'ф':
             case 'a':
                 await actions.move(-1, 0);

@@ -10,7 +10,6 @@ export interface Game {
     currentFigure: Figure,
     speed: number,
     score: number,
-    isPause: boolean,
 }
 
 export interface Action {

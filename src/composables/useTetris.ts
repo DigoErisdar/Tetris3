@@ -1,13 +1,14 @@
 import {Figure, FigureFactory, FIGURES} from "@/types/Figure.ts";
 import useMatrix from "@/composables/useMatrix.ts";
 import {Action, Game, Matrix} from "@/types/Game.ts";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {Block, Coordinate} from "@/types/Block.ts";
 import useController from "@/composables/useController.ts";
 import useSequence from "@/composables/useSequence.ts";
 
 export default function useTetris(cols: number, rows: number, speed: number = 200) {
-    let gameInterval: ReturnType<typeof setInterval>;
+    let gameInterval: ReturnType<typeof setTimeout>;
+    const isPause = ref(false);
     const matrix = useMatrix();
     const game = reactive<Game>({
         rows,
@@ -15,11 +16,10 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         matrix: matrix.get(rows, cols),
         currentFigure: getRandomFigure(),
         speed,
-        isPause: false,
         score: 0,
     })
     const figuresSequence = useSequence(3);
-    const controller = useController(game.isPause, {
+    const controller = useController(isPause, {
         pause,
         move,
         restart,
@@ -110,18 +110,21 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         await pause(false);
     }
 
-    async function pause(isPause = !game.isPause) {
-        game.isPause = isPause;
-        if (isPause) clearInterval(gameInterval)
-        else {
-            gameInterval = setInterval(() => {
-                move(0, 1)
-                    .catch(() => {
-                        checkLine();
-                        setNewFigure()
-                    })
+    async function pause(value = !isPause.value) {
+        isPause.value = value;
+        const loop = () => {
+            move(0, 1)
+                .catch(() => {
+                    checkLine();
+                    setNewFigure()
+                })
+            gameInterval = setTimeout(() => {
+                loop();
             }, game.speed)
         }
+        if (isPause.value) clearTimeout(gameInterval)
+        else loop()
+
     }
 
     function stop() {
@@ -144,6 +147,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         figuresSequence,
         start,
         game,
+        isPause,
         move,
         rotate,
     }
