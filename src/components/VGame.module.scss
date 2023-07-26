@@ -1,6 +1,7 @@
 .VGame {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
   h2 {
     text-align: center;
   }

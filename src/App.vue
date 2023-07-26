@@ -1,5 +1,7 @@
 <template>
-  <VGame/>
+  <div style="padding: 15px;">
+    <VGame/>
+  </div>
 </template>
 <script setup lang="ts">
 

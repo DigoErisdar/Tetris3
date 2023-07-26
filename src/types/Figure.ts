@@ -13,8 +13,10 @@ const createCube = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{color: 'red'}, {color: 'red'}],
-        [{color: 'red'}, {color: 'red'}],
+        [{color: 'red'}, {color: 'red'}, {}, {}],
+        [{color: 'red'}, {color: 'red'}, {}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 })
 const createLine = (): Figure => ({
@@ -35,9 +37,10 @@ const createZ = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{}, {color: 'green'}, {color: 'green'}],
-        [{color: 'green'}, {color: 'green'}, {}],
-        [{}, {}, {}],
+        [{}, {color: 'green'}, {color: 'green'}, {}],
+        [{color: 'green'}, {color: 'green'}, {}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 });
 const createRZ = (): Figure => ({
@@ -46,9 +49,10 @@ const createRZ = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{color: 'purple'}, {color: 'purple'}, {}],
-        [{}, {color: 'purple'}, {color: 'purple'}],
-        [{}, {}, {}],
+        [{color: 'purple'}, {color: 'purple'}, {}, {}],
+        [{}, {color: 'purple'}, {color: 'purple'}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 });
 const createG = (): Figure => ({
@@ -57,9 +61,10 @@ const createG = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{}, {}, {color: 'yellow'}],
-        [{color: 'yellow'}, {color: 'yellow'}, {color: 'yellow'}],
-        [{}, {}, {}],
+        [{}, {}, {color: 'yellow'}, {}],
+        [{color: 'yellow'}, {color: 'yellow'}, {color: 'yellow'}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 });
 const createRG = (): Figure => ({
@@ -68,9 +73,10 @@ const createRG = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{color: 'blueviolet'}, {}, {}],
-        [{color: 'blueviolet'}, {color: 'blueviolet'}, {color: 'blueviolet'}],
-        [{}, {}, {}],
+        [{color: 'blueviolet'}, {}, {}, {}],
+        [{color: 'blueviolet'}, {color: 'blueviolet'}, {color: 'blueviolet'}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 });
 const createT = (): Figure => ({
@@ -79,9 +85,10 @@ const createT = (): Figure => ({
         y: 0
     },
     matrix: [
-        [{}, {color: 'orange'}, {}],
-        [{color: 'orange'}, {color: 'orange'}, {color: 'orange'}],
-        [{}, {}, {}],
+        [{}, {color: 'orange'}, {}, {}],
+        [{color: 'orange'}, {color: 'orange'}, {color: 'orange'}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
     ]
 });
 

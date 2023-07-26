@@ -4,6 +4,7 @@ import {Action, Game, Matrix} from "@/types/Game.ts";
 import {reactive} from "vue";
 import {Block, Coordinate} from "@/types/Block.ts";
 import useController from "@/composables/useController.ts";
+import useSequence from "@/composables/useSequence.ts";
 
 export default function useTetris(cols: number, rows: number, speed: number = 200) {
     let gameInterval: ReturnType<typeof setInterval>;
@@ -17,7 +18,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
         isPause: false,
         score: 0,
     })
-
+    const figuresSequence = useSequence(3);
     const controller = useController(game.isPause, {
         pause,
         move,
@@ -85,7 +86,7 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
     }
 
     function setNewFigure() {
-        game.currentFigure = getRandomFigure();
+        game.currentFigure = figuresSequence.push(getRandomFigure());
         move(0, 0).catch(() => endGame())
     }
 
@@ -101,6 +102,10 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
     }
 
     async function start() {
+        let cond = figuresSequence.push(getRandomFigure());
+        while (!cond){
+            cond = figuresSequence.push(getRandomFigure());
+        }
         controller.on();
         await pause(false);
     }
@@ -137,8 +142,8 @@ export default function useTetris(cols: number, rows: number, speed: number = 20
     }
 
     return {
+        figuresSequence,
         start,
-        endGame,
         game,
         move,
         rotate,

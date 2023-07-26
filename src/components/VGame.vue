@@ -10,17 +10,22 @@
       <p>Пробел - До конца вниз</p>
     </div>
   </div>
+  <div style="display: flex; gap: 15px;">
+    <TableWidget v-for="figure in tetris.figuresSequence.items.value" :matrix="figure?.matrix"
+                 style="background: transparent; border: none;"/>
+  </div>
   <div :class="style.VGame">
     <div>
       <h2>Table</h2>
-      <TableWidget :matrix="tetris.game.matrix"/>
+      <div style="display: flex; gap: 5px;">
+        <TableWidget :matrix="tetris.game.matrix"/>
+      </div>
     </div>
     <div>
       <h2>Canvas</h2>
       <CanvasWidget :matrix="tetris.game.matrix"/>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
